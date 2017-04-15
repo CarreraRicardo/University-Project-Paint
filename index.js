@@ -14,34 +14,16 @@ app.use(express.static('public'))
 let shapesToDistributed
 
 let arrayToSendClients
-
+let shapes = []
 io.on('connection', (socket) => {
-
   console.log(`A user connection ${socket.id}`)
-
-  socket.on('shapes',(arrayShapes) => {
-
-		  		
-
-  		
-  		setInterval(() => {
-
-
-  			socket.broadcast.emit('figures',arrayShapes) 
-
-
-  		},1000)
-
-		
-
+  socket.broadcast.emit('figures',shapes) 
+  socket.emit('figures',shapes) 
+  socket.on('shapes',(shape) => {
+      shapes.push(shape);
+  		socket.broadcast.emit('figures',shapes) 
   })
-
-  
-  
 })
-
-
-
 
 server.listen(port, () => {
   console.log(`Estoy conectado al puerto ${port}`)
