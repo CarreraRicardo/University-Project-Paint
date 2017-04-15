@@ -36,14 +36,6 @@ function draw() {
 				noFill();
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y
-				var rectangulo = {
-					x:mouse.x,
-					y:mouse.y,
-					lastX:finishedMouse.x,
-					lastY:finishedMouse.y,
-					type:'rectangle'
-				};
-				socket.emit('shapes',rectangulo)
 				rect(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y);
 				break;
 		}
@@ -89,8 +81,7 @@ function mouseReleased(){
 				type:'rectangle'
 			};
 			localShapes.push(rectangulo)
-			paint(localShapes)
-			socket.emit('shapes',localShapes)
+			socket.emit('shapes',rectangulo)
 		break;
 
 
