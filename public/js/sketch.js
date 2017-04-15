@@ -33,7 +33,6 @@ function draw() {
 		switch(shapeClicked){
 			case 'rectangle':
 				rectMode(CORNER)
-				noFill();
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y
 				rect(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y);
@@ -94,6 +93,7 @@ function paint(shapes){
 	shapes.forEach(function(shape){
 		switch(shape.type){
 			case 'rectangle':
+			  noFill();
 			  rect(shape.x,shape.y,shape.lastX,shape.lastY)
 			break;
 		}
