@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>Ejemplo</title>
+	<style>	
+
+		body{
+			
+			  /*background-image: url("img/note.jpg");*/
+
+		}
+		
+		.mainDiv{
+			margin:auto;
+			border-radius: 25px;
+			border: 2px solid #73AD21;
+			width:90%;
+			height: 600px;
+			
+		}
+
+		.toolDiv{
+			float: left;
+			border-radius: 25px;
+			border: 2px solid #505653;
+			margin-left: 45px;
+			margin-top:20px;
+			height: 545px;
+			width:70px;
+			background-color: #F1F0EF;
+			
+			
+		}
+
+		.shapes{
+			
+			margin-top: 18px;
+			margin-left: 10px;
+			width:70%;
+			height: 50px;
+			
+		}
+		
+		.shapes:hover{
+			 -webkit-transition: all 200ms ease-in;
+   			 -webkit-transform: scale(1.3);
+		}
+
+		.canvasDiv{
+			float:left;
+			margin-top: 28px;
+			margin-left: 10px;
+			/*
+			width: 1050px;
+			height: 540px;
+			*/
+		}
+
+		.borders{
+			
+			border-style:solid;
+
+		}
+		
+		#tmp_canvas {
+
+			position: absolute;
+			left: 208px; right: 0;
+			bottom: 0; top: 41px;
+			cursor: crosshair;
+			background-color: #FFFFFF;
+		}
+
+
+	</style>
+
+	<script src="js/p5.min.js"></script>
+    <script src="js/p5.dom.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+</head>
+<body>
+	
+	<div class="mainDiv" >
+		
+		<div class="toolDiv" >
+
+			<section id ="shapes">
+				<img src="img/rect.png"   alt="rect" class="shapes" data-figure = "rectangle">
+				<img src="img/tri.png"  alt="triangle" class="shapes" data-figure = "triangle">
+				<img src="img/cir.png"   alt="circle" class="shapes" data-figure = "circle">
+				<img src="img/line.png"  alt="line" class="shapes" data-figure = "line">
+				<img src="img/pencil.png"  alt="pencil" class="shapes" data-figure = "pencil">
+				<img src="img/era.png"  alt="eraser" class="shapes" data-figure = "eraser">
+			</section>
+
+			
+
+		</div>
+
+		<div class="canvasDiv" id="canvasDiv"></div>
+
+		
+
+	</div>
+
+	
+ <script src="js/sketch.js"></script>	
+</body>
+</html>
+
