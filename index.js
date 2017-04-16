@@ -16,9 +16,13 @@ let shapesToDistributed
 let arrayToSendClients
 let shapes = []
 io.on('connection', (socket) => {
+
   console.log(`A user connection ${socket.id}`)
-  socket.broadcast.emit('figures',shapes) 
-  socket.emit('figures',shapes) 
+
+  //socket.broadcast.emit('figures',shapes) 
+
+  //socket.emit('figures',shapes) 
+
   socket.on('shapes',(shape) => {
       shapes.push(shape);
   		socket.broadcast.emit('figures',shapes) 
