@@ -39,22 +39,30 @@ function draw() {
 				rectMode(CORNER)
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y
+				stroke(color)
+				strokeWeight(4);
 				rect(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y);
 				break;
 			case 'circle':
 				//ellipseMode(CORNER)
 				finishedMouse.x = mouseX - mouse.x
-				finishedMouse.y = mouseY - mouse.y				
+				finishedMouse.y = mouseY - mouse.y
+				stroke(color)
+				strokeWeight(4);				
 				ellipse(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 			break;
 			case 'line':
 				finishedMouse.x = pmouseX
 				finishedMouse.y = pmouseY
+				stroke(color)
+				strokeWeight(4);
 				line(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 			break;
 			case 'triangle':
 				if(mouse.x === pmouseX){
 					console.log(`mismo punto 1 ${mouse.x} , ${pmouseX}`)
+					stroke(color)
+					strokeWeight(4);
 					triangle(mouse.x,mouse.y,pmouseX,pmouseY,pmouseX,mouse.y)
 				}
 				else{
@@ -65,6 +73,8 @@ function draw() {
 					triangles.y2 = pmouseY
 					triangles.x3 = pmouseX
 					triangles.y3 = mouse.y
+					stroke(color)
+					strokeWeight(4);
 					triangle(triangles.x1,triangles.y1,triangles.x2,triangles.y2,triangles.x3,triangles.y3)
 				}
 			break;
@@ -141,6 +151,7 @@ function mouseReleased(){
 function paint(shapes){
 	shapes.forEach(function(shape){
 		stroke(shape.color)
+		strokeWeight(4)
 		switch(shape.type){
 			case 'rectangle':
 			  noFill();
