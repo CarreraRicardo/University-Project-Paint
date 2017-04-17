@@ -6,11 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>Ejemplo</title>
 	<style>	
-
 		body{
-			
-			  /*background-image: url("img/note.jpg");*/
-
+			margin: 0;
+            padding: 0;
+            height:100%;
 		}
 		
 		.mainDiv{
@@ -19,10 +18,11 @@
 			border: 2px solid #73AD21;
 			width:90%;
 			height: 600px;
-			
+			position: relative;
 		}
 
 		.toolDiv{
+			position: absolute;
 			float: left;
 			border-radius: 25px;
 			border: 2px solid #505653;
@@ -31,17 +31,13 @@
 			height: 545px;
 			width:70px;
 			background-color: #F1F0EF;
-			
-			
 		}
 
 		.shapes{
-			
 			margin-top: 18px;
 			margin-left: 10px;
 			width:70%;
 			height: 50px;
-			
 		}
 		
 		.shapes:hover{
@@ -50,13 +46,9 @@
 		}
 
 		.canvasDiv{
-			float:left;
+			float: right;
 			margin-top: 28px;
 			margin-left: 10px;
-			/*
-			width: 1050px;
-			height: 540px;
-			*/
 		}
 
 		.borders{
@@ -85,26 +77,16 @@
 <body>
 	
 	<div class="mainDiv" >
-		
 		<div class="toolDiv" >
-
 			<section id ="shapes">
 				<img src="img/rect.png"   alt="rect" class="shapes" data-figure = "rectangle">
 				<img src="img/tri.png"  alt="triangle" class="shapes" data-figure = "triangle">
 				<img src="img/cir.png"   alt="circle" class="shapes" data-figure = "circle">
 				<img src="img/line.png"  alt="line" class="shapes" data-figure = "line">
-				<img src="img/pencil.png"  alt="pencil" class="shapes" data-figure = "pencil">
-				<img src="img/era.png"  alt="eraser" class="shapes" data-figure = "eraser">
+				<input type="color" class="shapes" id="color" value="#000000">
 			</section>
-
-			
-
 		</div>
-
 		<div class="canvasDiv" id="canvasDiv"></div>
-
-		
-
 	</div>
 
 	
