@@ -3,7 +3,7 @@
 const arrayImg = document.getElementById('shapes').children
 let shapeClicked
 let drawing
-let socket = io.connect('http://192.168.1.132:3000') // ip del localhost
+let socket = io.connect('http://192.168.1.66:3000') // ip del localhost
 let mouse
 let finishedMouse
 let triangles
@@ -34,35 +34,33 @@ function draw() {
 	clear();
 	if (mouseIsPressed && drawing === true) {
 		color = document.getElementById("color").value;
+		stroke(color)
+		strokeWeight(4)
 		switch(shapeClicked){
 			case 'rectangle':
 				rectMode(CORNER)
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y
-				stroke(color)
-				strokeWeight(4);
+
 				rect(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y);
 				break;
 			case 'circle':
 				//ellipseMode(CORNER)
 				finishedMouse.x = mouseX - mouse.x
-				finishedMouse.y = mouseY - mouse.y
-				stroke(color)
-				strokeWeight(4);				
+				finishedMouse.y = mouseY - mouse.y	
 				ellipse(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 			break;
 			case 'line':
 				finishedMouse.x = pmouseX
 				finishedMouse.y = pmouseY
-				stroke(color)
-				strokeWeight(4);
+				
+				
 				line(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 			break;
 			case 'triangle':
 				if(mouse.x === pmouseX){
 					console.log(`mismo punto 1 ${mouse.x} , ${pmouseX}`)
-					stroke(color)
-					strokeWeight(4);
+					
 					triangle(mouse.x,mouse.y,pmouseX,pmouseY,pmouseX,mouse.y)
 				}
 				else{
@@ -73,8 +71,7 @@ function draw() {
 					triangles.y2 = pmouseY
 					triangles.x3 = pmouseX
 					triangles.y3 = mouse.y
-					stroke(color)
-					strokeWeight(4);
+					
 					triangle(triangles.x1,triangles.y1,triangles.x2,triangles.y2,triangles.x3,triangles.y3)
 				}
 			break;
