@@ -276,7 +276,19 @@ function insideShape(shapes){
 					return shapes[i].idShape;
 				}
 			break;
-
+			case 'triangle':
+				var abc = area (shapes[i].x1, shapes[i].y1, shapes[i].x2, shapes[i].y2, shapes[i].x3, shapes[i].y3);
+				/* Calculate area of triangle PBC */  
+				var pbc = area (mouseX, mouseY, shapes[i].x2, shapes[i].y2, shapes[i].x3, shapes[i].y3);
+				/* Calculate area of triangle PAC */  
+				var pac = area (shapes[i].x1, shapes[i].y1, mouseX, mouseY, shapes[i].x3, shapes[i].y3);
+				/* Calculate area of triangle PAB */   
+				var pab = area (shapes[i].x1, shapes[i].y1, shapes[i].x2, shapes[i].y2, mouseX, mouseY);
+				
+				if (abc == pbc + pac + pab) {
+					return shapes[i].idShape;
+				}
+			break;
 		}
 		
 	}
@@ -285,6 +297,9 @@ function insideShape(shapes){
 
 }
 
+function area(x1, y1, x2, y2, x3, y3) {
+	return Math.abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2);
+}
 var transform = {
 
 	scale:function(s1,s2,figure){
@@ -330,9 +345,31 @@ var transform = {
 
 			break;
 			case 'rectangle':
-				let s = min( dst.width/src.width, dst.height/src.height)
+				let coord1 = [];
+				let newXR = figure.x * s1;
+				let newYR = figure.y * s2;
+				let newLastX = figure.lastX * s1;
+				let newLastY = figure.lastY * s2;
+				coord1.push(newXR, newYR,newLastX, newLastY)
+				return coord1;
 			break;
+			case 'triangle':
 
+				console.log(figure.lastX + ":" + figure.lastY);
+
+				let coords1 = []
+
+				let newX1T = figure.x1 * s1
+				let newY1T = figure.y1 * s2
+				let newX2T = figure.y1 * s1
+				let newY2T = figure.y2  * s2
+				let newX3T = figure.x3 * s1
+				let newY3T = figure.y3  * s2
+				coords1.push(newX1T,newY1T,newX2T,newY2T, newX3T, newY3T)
+
+				return coords1;
+
+			break;
 
 		}
 
@@ -341,7 +378,6 @@ var transform = {
 		let mouse = []
 		mouse.push(mouseX)
 		mouse.push(mouseY)
-	
 		return mouse
 	}
 }
@@ -365,10 +401,29 @@ function mouseTranslate(){
 
 			}
 		}
-
 		let coords = transform.translate(mouseX,mouseY,localShapes[indexFigure])
-		localShapes[indexFigure].x = coords[0]
-		localShapes[indexFigure].y = coords[1]
+		switch(localShapes[indexFigure].type) {
+			
+			case 'circle':
+			case 'rectangle':
+				localShapes[indexFigure].x = coords[0]
+				localShapes[indexFigure].y = coords[1]
+			break;
+			case 'triangle':
+				let lx1 = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].x2)
+				let ly1 = Math.abs(localShapes[indexFigure].y - localShapes[indexFigure].y2)
+				localShapes[indexFigure].x1 = coords[0]
+				localShapes[indexFigure].y1 = coords[1]
+			break;
+			case 'line':
+				let lx = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].lastX)
+				let ly = Math.abs(localShapes[indexFigure].y - localShapes[indexFigure].lastY)
+				localShapes[indexFigure].x = coords[0]
+				localShapes[indexFigure].y = coords[1]
+				localShapes[indexFigure].lastX = coords[0] + lx
+				localShapes[indexFigure].lastY = coords[1] + ly
+			break;
+		}
 	}
 }
 
@@ -435,7 +490,29 @@ function mouseWheel(event){
 
 
 			break;
+			case 'rectangle':
+			let coord1 = transform.scale(zoom,zoom,localShapes[indexFigure])
+			localShapes[indexFigure].x = coord1[0]
+			localShapes[indexFigure].y = coord1[1]
+			localShapes[indexFigure].lastX = coord1[2]
+			localShapes[indexFigure].lastY = coord1[3]
+			break;
+			case 'triangle':
 
+			console.log(localShapes[indexFigure].type + "2");
+
+			 let coords1 = transform.scale(zoom,zoom,localShapes[indexFigure])
+
+
+
+			localShapes[indexFigure].x1 = coords1[0]
+			localShapes[indexFigure].y1 = coords1[1]
+			localShapes[indexFigure].x2 = coords1[2]
+			localShapes[indexFigure].y2 = coords1[3]
+			localShapes[indexFigure].x3 = coords1[4]
+			localShapes[indexFigure].y3 = coords1[5]
+
+			break;
 		}
 
 
