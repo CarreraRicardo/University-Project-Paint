@@ -24,11 +24,6 @@ for(let i = 0; i < arrayImg.length; i++){
 	})
 }
 
-
-
-
-
-
 function setup() {
   const canvas = createCanvas(1060, 540)
   canvas.parent('canvasDiv')
@@ -101,7 +96,7 @@ function draw() {
 	//paint(shapes);
 	paint(localShapes)
 
-	mouseTranslate()
+	mouseTranslate();
 
 	//console.log(localShapes.length)
 
@@ -273,14 +268,13 @@ function insideShape(shapes){
 			case 'circle':
 
 				if(Math.pow(mouseX-shapes[i].x,2)+Math.pow(mouseY-shapes[i].y,2) < Math.pow(shapes[i].lastX,2)){
-
-
 					//alert(shapes[i].idShape);
-
-					return shapes[i].idShape;
-					
+					return shapes[i].idShape;	
 				}
-
+			case 'rectangle':
+				if(shapes[i].x + shapes[i].lastX >= mouseX && shapes[i].x <= mouseX && shapes[i].y + shapes[i].lastY >= mouseY && shapes[i].y <= mouseY) {
+					return shapes[i].idShape;
+				}
 			break;
 
 		}
@@ -335,42 +329,24 @@ var transform = {
 				return coord;
 
 			break;
-
+			case 'rectangle':
+				let s = min( dst.width/src.width, dst.height/src.height)
+			break;
 
 
 		}
 
 	},
 	translate:function(mouseX,mouseY,figure){
-
-		switch(figure.type){
-
-			case 'circle':
-
-				let mouse = []
-
-
-				mouse.push(mouseX)
-				mouse.push(mouseY)
-			
-				return mouse
-		
-
-			break;
-
-
-
-		}
-
-
-
+		let mouse = []
+		mouse.push(mouseX)
+		mouse.push(mouseY)
+	
+		return mouse
 	}
 }
 
 function mouseTranslate(){
-
-	
-
 	if(indexToTransform > 0 && drawing === false && mouseIsPressed ){
 
 		console.log("entre a mouseTranslate");
@@ -390,24 +366,10 @@ function mouseTranslate(){
 			}
 		}
 
-		switch(localShapes[indexFigure].type){
-
-			case 'circle':
-
-			let coords = transform.translate(mouseX,mouseY,localShapes[indexFigure])
-
-			localShapes[indexFigure].x = coords[0]
-			localShapes[indexFigure].y = coords[1]
-
-
-			break;
-
-		}
-
-
+		let coords = transform.translate(mouseX,mouseY,localShapes[indexFigure])
+		localShapes[indexFigure].x = coords[0]
+		localShapes[indexFigure].y = coords[1]
 	}
-
-
 }
 
 
