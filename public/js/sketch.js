@@ -15,12 +15,16 @@ let cont = 0
 let idShape = 0
 let indexToTransform
 let escale
-let zoomIntensity 
+let zoomIntensity
+let lastXPos,lastYPos
+let figuraClick
+
 
 for(let i = 0; i < arrayImg.length; i++){
 	arrayImg[i].addEventListener('click',() =>{
 		shapeClicked = arrayImg[i].getAttribute('data-figure')
-		//console.log(shapeClicked);
+		
+		console.log(shapeClicked);
 	})
 }
 
@@ -42,6 +46,9 @@ function draw() {
 	background('WHITE')
 	clear();
 	if (mouseIsPressed && drawing === true) {
+
+		//console.log('pinto')
+
 		color = document.getElementById("color").value;
 		stroke(color)
 		strokeWeight(4)
@@ -102,7 +109,7 @@ function draw() {
 
 	indexToTransform = insideShape(localShapes)
 
-	//console.log("index to transform: " + indexToTransform);
+	//console.log("index to transform1: " + indexToTransform);
 
 }
 
@@ -122,6 +129,8 @@ function mousePressed(){
 	else{
 
 		drawing = false;
+		lastXPos = mouseX
+		lastYPos = mouseY
 
 	}
 
@@ -134,7 +143,7 @@ function mouseReleased(){
 
 	drawing = false;
 
-	//console.log("entro a pintar")
+	//console.log("indexToTransform: " + indexToTransform)
 
 	if(indexToTransform < 0){
 
@@ -185,6 +194,7 @@ function mouseReleased(){
 				socket.emit('shapes',linea)
 			break;
 			case 'triangle':
+
 				idShape++
 				let triangulo = {
 					x1:triangles.x1,
@@ -217,8 +227,10 @@ function paint(shapes){
 			 //ellipse(shape.x,shape.y,shape.lastX,shape.lastY)
 
 			 circleBresenham(shape.x,shape.y,shape.lastX)
+			 console.log("id del circulo "+ shape.idShape)
 			 
 			break;
+
 			case 'line':
 				//line(shape.x,shape.y,shape.lastX,shape.lastY);
 				//lineBresenham(shape.x,shape.y,shape.lastX,shape.lastY)
@@ -229,6 +241,7 @@ function paint(shapes){
 			break;
 			case 'triangle':
 				triangle(shape.x1,shape.y1,shape.x2,shape.y2,shape.x3,shape.y3);
+				console.log("id del triangulo "+ shape.x1)
 			break;
 		}
 	});
@@ -242,7 +255,7 @@ function insideShape(shapes){
 
 			case 'line':
 
-				var tolerance = 5
+				var tolerance = 10
 
 				var linePoint = linepointNearestMouse(shapes[i],mouseX,mouseY);
 
@@ -277,17 +290,57 @@ function insideShape(shapes){
 				}
 			break;
 			case 'triangle':
+
+				/*
 				var abc = area (shapes[i].x1, shapes[i].y1, shapes[i].x2, shapes[i].y2, shapes[i].x3, shapes[i].y3);
-				/* Calculate area of triangle PBC */  
+				/* Calculate area of triangle PBC   
 				var pbc = area (mouseX, mouseY, shapes[i].x2, shapes[i].y2, shapes[i].x3, shapes[i].y3);
-				/* Calculate area of triangle PAC */  
+				/* Calculate area of triangle PAC   
 				var pac = area (shapes[i].x1, shapes[i].y1, mouseX, mouseY, shapes[i].x3, shapes[i].y3);
-				/* Calculate area of triangle PAB */   
+				/* Calculate area of triangle PAB    
 				var pab = area (shapes[i].x1, shapes[i].y1, shapes[i].x2, shapes[i].y2, mouseX, mouseY);
 				
 				if (abc == pbc + pac + pab) {
+
+					console.log(`detecto triangulo`)
 					return shapes[i].idShape;
 				}
+				*/
+
+			
+				var mousePoints ={
+
+					x:mouseX,
+					y:mouseY
+
+
+				};
+
+				var v1 = {
+					x:shapes[i].x1,
+					y: shapes[i].y1
+				};
+
+				var v2 = {
+					x:shapes[i].x2,
+					y: shapes[i].y2
+				}; 
+
+				var v3 = {
+					x:shapes[i].x3,
+					y:shapes[i].y3
+				};
+
+				if(inTriangle(mousePoints,v1,v2,v3)){
+
+
+					return shapes[i].idShape
+
+				}  
+
+
+
+				
 			break;
 		}
 		
@@ -300,6 +353,25 @@ function insideShape(shapes){
 function area(x1, y1, x2, y2, x3, y3) {
 	return Math.abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2);
 }
+
+function sign(p1,p2,p3){
+
+	return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y) 
+
+}
+
+function inTriangle(pt,v1,v2,v3){
+
+	var b1 = sign(pt, v1, v2) < 0.0
+    var b2 = sign(pt, v2, v3) < 0.0
+    var b3 = sign(pt, v3, v1) < 0.0
+
+    return ((b1 == b2) && (b2 == b3))
+
+}
+
+
+
 var transform = {
 
 	scale:function(s1,s2,figure){
@@ -328,7 +400,7 @@ var transform = {
 
 			case 'line':
 
-				console.log(figure.lastX + ":" + figure.lastY);
+				//console.log(figure.lastX + ":" + figure.lastY);
 
 				let coord = []
 
@@ -337,7 +409,7 @@ var transform = {
 				let newX2 = figure.lastX * s1
 				let newY2 = figure.lastY  * s2
 
-				console.log(newX2 + ":" + newY2)
+				//console.log(newX2 + ":" + newY2)
 
 				coord.push(newX1,newY1,newX2,newY2)
 
@@ -355,13 +427,13 @@ var transform = {
 			break;
 			case 'triangle':
 
-				console.log(figure.lastX + ":" + figure.lastY);
+				//console.log(figure.x1 + ":" + figure.x2);
 
 				let coords1 = []
 
 				let newX1T = figure.x1 * s1
 				let newY1T = figure.y1 * s2
-				let newX2T = figure.y1 * s1
+				let newX2T = figure.x2 * s1
 				let newY2T = figure.y2  * s2
 				let newX3T = figure.x3 * s1
 				let newY3T = figure.y3  * s2
@@ -385,7 +457,9 @@ var transform = {
 function mouseTranslate(){
 	if(indexToTransform > 0 && drawing === false && mouseIsPressed ){
 
-		console.log("entre a mouseTranslate");
+		
+
+		//console.log("valor de lastXpos: " + lastXPos);
 
 		let indexFigure
 
@@ -410,18 +484,54 @@ function mouseTranslate(){
 				localShapes[indexFigure].y = coords[1]
 			break;
 			case 'triangle':
-				let lx1 = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].x2)
-				let ly1 = Math.abs(localShapes[indexFigure].y - localShapes[indexFigure].y2)
-				localShapes[indexFigure].x1 = coords[0]
-				localShapes[indexFigure].y1 = coords[1]
+				//let lx1 = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].x2)
+				//let ly1 = Math.abs(localShapes[indexFigure].y - localShapes[indexFigure].y2)
+
+				var dx1=coords[0]-lastXPos;
+    			var dy1=coords[1]-lastYPos;
+				
+				lastXPos = coords[0]
+    			lastYPos = coords[1]
+
+    			localShapes[indexFigure].x1 += dx1
+				localShapes[indexFigure].y1 += dy1 
+				localShapes[indexFigure].x2 += dx1
+				localShapes[indexFigure].y2 += dy1 
+				localShapes[indexFigure].x3 += dx1 
+				localShapes[indexFigure].y3 += dy1 
+				
+			
+
+
 			break;
 			case 'line':
+
+				
+				/*
 				let lx = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].lastX)
 				let ly = Math.abs(localShapes[indexFigure].y - localShapes[indexFigure].lastY)
-				localShapes[indexFigure].x = coords[0]
-				localShapes[indexFigure].y = coords[1]
-				localShapes[indexFigure].lastX = coords[0] + lx
-				localShapes[indexFigure].lastY = coords[1] + ly
+				*/
+
+
+				 var dx=coords[0]-lastXPos;
+    			 var dy=coords[1]-lastYPos;	
+
+    			 lastXPos = coords[0]
+    			 lastYPos = coords[1]
+
+				//localShapes[indexFigure].x = coords[0]
+				//localShapes[indexFigure].y = coords[1]
+				//localShapes[indexFigure].lastX = coords[0] + lx
+				//localShapes[indexFigure].lastY = coords[1] + ly
+				
+				localShapes[indexFigure].x += dx
+				localShapes[indexFigure].y += dy
+				localShapes[indexFigure].lastX += dx
+				localShapes[indexFigure].lastY += dy
+				
+
+
+
 			break;
 		}
 	}
@@ -477,7 +587,7 @@ function mouseWheel(event){
 
 			case 'line':
 
-			console.log(localShapes[indexFigure].type + "2");
+			//console.log(localShapes[indexFigure].type + "2");
 
 			 let coord = transform.scale(zoom,zoom,localShapes[indexFigure])
 
@@ -499,10 +609,14 @@ function mouseWheel(event){
 			break;
 			case 'triangle':
 
-			console.log(localShapes[indexFigure].type + "2");
+			//console.log(localShapes[indexFigure].type + "2");
+
+			//console.log("valores del triangulo:" + localShapes[indexFigure].x1 + ":" + localShapes[indexFigure].y1 + 
+			//	" " + localShapes[indexFigure].x2 + ":" + localShapes[indexFigure].y2 + " " + localShapes[indexFigure].x3 + 
+			//	":" + localShapes[indexFigure].y3);
 
 			 let coords1 = transform.scale(zoom,zoom,localShapes[indexFigure])
-
+		 
 
 
 			localShapes[indexFigure].x1 = coords1[0]
