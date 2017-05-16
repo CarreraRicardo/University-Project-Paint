@@ -24,10 +24,35 @@ io.on('connection', (socket) => {
   socket.emit('figures',shapes) 
 
   socket.on('shapes',(shape) => {
+
+
       shapes.push(shape);
   		socket.broadcast.emit('figures',shapes) 
   })
+
+
+  socket.on('transform',(shape) => {
+ 
+	  	for(let i = 0 ; i < shapes.length; i++){
+
+	  		if(shapes[i].idShape == shape.idShape){
+
+	  			shapes[i] = shape
+
+	  		}
+
+	  	}
+	
+		socket.broadcast.emit('figures',shapes)
+
+   })
+
+
+
+
 })
+
+
 
 server.listen(port, () => {
   console.log(`Estoy conectado al puerto ${port}`)

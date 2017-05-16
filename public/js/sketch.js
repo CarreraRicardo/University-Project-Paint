@@ -100,7 +100,8 @@ function draw() {
 			break;
 		}
 	}
-	//paint(shapes);
+	
+	paint(shapes);
 	paint(localShapes)
 
 	mouseTranslate();
@@ -482,6 +483,9 @@ function mouseTranslate(){
 			case 'rectangle':
 				localShapes[indexFigure].x = coords[0]
 				localShapes[indexFigure].y = coords[1]
+
+				socket.emit('transform',localShapes[indexFigure])
+
 			break;
 			case 'triangle':
 				//let lx1 = Math.abs(localShapes[indexFigure].x - localShapes[indexFigure].x2)
@@ -500,7 +504,7 @@ function mouseTranslate(){
 				localShapes[indexFigure].x3 += dx1 
 				localShapes[indexFigure].y3 += dy1 
 				
-			
+				socket.emit('transform',localShapes[indexFigure])
 
 
 			break;
@@ -530,7 +534,7 @@ function mouseTranslate(){
 				localShapes[indexFigure].lastY += dy
 				
 
-
+				socket.emit('transform',localShapes[indexFigure])
 
 			break;
 		}
@@ -583,6 +587,9 @@ function mouseWheel(event){
 			//localShapes[indexFigure].y = coords[1]
 			localShapes[indexFigure].lastX = coords[2]
 
+			socket.emit('transform',localShapes[indexFigure])
+
+
 			break;
 
 			case 'line':
@@ -598,6 +605,8 @@ function mouseWheel(event){
 			localShapes[indexFigure].lastX = coord[2]
 			localShapes[indexFigure].lastY = coord[3]
 
+			socket.emit('transform',localShapes[indexFigure])
+
 
 			break;
 			case 'rectangle':
@@ -606,6 +615,9 @@ function mouseWheel(event){
 			localShapes[indexFigure].y = coord1[1]
 			localShapes[indexFigure].lastX = coord1[2]
 			localShapes[indexFigure].lastY = coord1[3]
+
+			socket.emit('transform',localShapes[indexFigure])
+
 			break;
 			case 'triangle':
 
@@ -625,6 +637,8 @@ function mouseWheel(event){
 			localShapes[indexFigure].y2 = coords1[3]
 			localShapes[indexFigure].x3 = coords1[4]
 			localShapes[indexFigure].y3 = coords1[5]
+
+			socket.emit('transform',localShapes[indexFigure])
 
 			break;
 		}
