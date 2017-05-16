@@ -19,7 +19,6 @@ let zoomIntensity
 let lastXPos,lastYPos
 let figuraClick
 
-
 for(let i = 0; i < arrayImg.length; i++){
 	arrayImg[i].addEventListener('click',() =>{
 		shapeClicked = arrayImg[i].getAttribute('data-figure')
@@ -446,6 +445,60 @@ var transform = {
 		mouse.push(mouseX)
 		mouse.push(mouseY)
 		return mouse
+	},
+	rotate: function(a, figure, keyCode) {
+		let newCoords = []
+		let centerX;
+		let centerY;
+		a = a * Math.PI / 180.0
+		switch(figure.type) {
+			case 'line':
+				let newLineX;
+				let newLineY;
+				centerX = figure.x + (figure.lastX - figure.x) * 0.5
+				centerY = figure.y + (figure.lastY - figure.y) * 0.5
+				if (keyCode === RIGHT_ARROW || keyCode == UP_ARROW) {
+					newLineX = Math.cos(a) * (figure.x-centerX) - Math.sin(a) * (figure.y-centerY) + centerX
+					newLineY =  Math.sin(a) * (figure.x-centerX) + Math.cos(a) * (figure.y-centerY) + centerY
+					newCoords.push(newLineX, newLineY)
+				} else if(keyCode === LEFT_ARROW || keyCode == DOWN_ARROW){
+					newLineX = Math.cos(a) * (figure.lastX-centerX) - Math.sin(a) * (figure.lastY-centerY) + centerX
+					newLineY =  Math.sin(a) * (figure.lastX-centerX) + Math.cos(a) * (figure.lastY-centerY) + centerY
+					newCoords.push(newLineX, newLineY)
+				}
+			break;
+			case 'rectangle':
+				centerX = figure.x + (figure.lastX - figure.x) * 0.5
+				centerY = figure.y + (figure.lastY - figure.y) * 0.5
+				let newRectangleX;
+				let newRectangleY;
+				let newRectangleLastX;
+				let newRectangleLastY;
+				newRectangleX = Math.cos(a) * (figure.x-centerX) - Math.sin(a) * (figure.y-centerY) + centerX
+				newRectangleY = Math.sin(a) * (figure.x-centerX) + Math.cos(a) * (figure.y-centerY) + centerY
+				newRectangleLastX = Math.cos(a) * (figure.lastX-centerX) - Math.sin(a) * (figure.lastY-centerY) + centerX
+				newRectangleLastY = Math.sin(a) * (figure.lastX-centerX) + Math.cos(a) * (figure.lastY-centerY) + centerY
+				newCoords.push(newRectangleX, newRectangleY, newRectangleLastX, newRectangleLastY)
+			break;
+			case 'triangle':
+				let newTriangleX;
+				let newTriangleY;
+				let newTriangleX2;
+				let newTriangleY2;
+				let newTriangleX3;
+				let newTriangleY3
+				centerX = figure.x1 + (figure.x2 - figure.x1) * 0.5
+				centerY = figure.y1 + (figure.y2 - figure.y1) * 0.5
+				newTriangleX = Math.cos(a) * (figure.x1-centerX) - Math.sin(a) * (figure.y1-centerY) + centerX
+				newTriangleY =  Math.sin(a) * (figure.x1-centerX) + Math.cos(a) * (figure.y1-centerY) + centerY
+				newTriangleX2 = Math.cos(a) * (figure.x2-centerX) - Math.sin(a) * (figure.y2-centerY) + centerX
+				newTriangleY2 =  Math.sin(a) * (figure.x2-centerX) + Math.cos(a) * (figure.y2-centerY) + centerY
+				newTriangleX3 = Math.cos(a) * (figure.x3-centerX) - Math.sin(a) * (figure.y3-centerY) + centerX
+				newTriangleY3 =  Math.sin(a) * (figure.x3-centerX) + Math.cos(a) * (figure.y3-centerY) + centerY
+				newCoords.push(newTriangleX, newTriangleY, newTriangleX2, newTriangleY2, newTriangleX3, newTriangleY3)
+			break;
+		}
+		return newCoords
 	}
 }
 
@@ -642,7 +695,51 @@ function mouseWheel(event){
 
 }
 	
+function keyPressed() {
+	let currentFigure
+	if (indexToTransform > 0) {
+		for(let i = 0; i < localShapes.length; i++){
 
+			if(localShapes[i].idShape === indexToTransform){
+
+				currentFigure = i;
+				break;
+
+			}
+		}
+		var r;
+		switch(localShapes[currentFigure].type) {
+			case 'line':
+			if (keyCode == RIGHT_ARROW || keyCode == UP_ARROW) {
+				r = transform.rotate(45, localShapes[currentFigure], keyCode)
+				localShapes[currentFigure].x = r[0]
+				localShapes[currentFigure].y = r[1]
+			} else if (keyCode == LEFT_ARROW || keyCode == DOWN_ARROW) {
+				r = transform.rotate(-45, localShapes[currentFigure], keyCode)
+				localShapes[currentFigure].lastX = r[0]
+				localShapes[currentFigure].lastY = r[1]
+			} 
+			break;
+			case 'rectangle':
+				r = transform.rotate(45, localShapes[currentFigure], keyCode)
+				localShapes[currentFigure].x = r[0]
+				localShapes[currentFigure].y = r[1]
+				localShapes[currentFigure].lastX = r[2]
+				localShapes[currentFigure].lastY = r[3]
+			break;
+			case 'triangle':
+				r = transform.rotate(45, localShapes[currentFigure], keyCode)
+				localShapes[currentFigure].x1 = r[0]
+				localShapes[currentFigure].y1 = r[1]
+				localShapes[currentFigure].x2 = r[2]
+				localShapes[currentFigure].y2 = r[3]
+				localShapes[currentFigure].x3 = r[4]
+				localShapes[currentFigure].y3 = r[5]
+			break;
+		}
+	}
+
+}
 
 //////////////////////////////////
 var lineBresenham = function(x0, y0, x1, y1) {
