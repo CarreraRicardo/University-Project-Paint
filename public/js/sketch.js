@@ -57,7 +57,6 @@ function draw() {
 				rectMode(CORNER)
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y
-
 				rect(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y);
 				break;
 			case 'circle':
@@ -65,20 +64,15 @@ function draw() {
 				finishedMouse.x = mouseX - mouse.x
 				finishedMouse.y = mouseY - mouse.y	
 				//ellipse(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
-
 				circleBresenham(mouse.x,mouse.y,finishedMouse.x)
 
 			break;
 			case 'line':
 				finishedMouse.x = pmouseX
 				finishedMouse.y = pmouseY
-				
-				
 				//line(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 				//lineBresenham(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
 				Direct(mouse.x,mouse.y,finishedMouse.x,finishedMouse.y)
-			
-
 			break;
 			case 'triangle':
 				if(mouse.x === pmouseX){
